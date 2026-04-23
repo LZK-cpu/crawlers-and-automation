@@ -1,0 +1,75 @@
+import random
+import time
+
+import execjs
+from selenium import webdriver
+from selenium.webdriver.edge.options import Options
+import requests
+from lxml import etree
+
+url = 'https://music.163.com/weapi/song/enhance/player/url/v1?csrf_token=18f8bc0fc21c38470448f08d3badef4b'
+# def shezhi():
+#     opt = Options()
+#     opt.add_argument("--no-sandbox")
+#     opt.add_argument('--disable-blink-features=AutomationControlled')
+#     # opt.add_argument('--headless')
+#     opt.add_experimental_option('detach', True)
+#     driver = webdriver.Edge(options=opt)
+#     driver.maximize_window()
+#     driver.get(url)
+#     driver.implicitly_wait(10)
+#     return driver
+#
+# driver = shezhi()
+
+headers = {
+    'user-agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0',
+    'cookie':
+        'NMTID=00Ocgp4n9wFlrTRmE1TtjEGpil44W4AAAGV-4GHjA; _iuqxldmzr_=32; _ntes_nnid=61a2a76de52d5b543d654a1d2c5a90f0,1743681325307; _ntes_nuid=61a2a76de52d5b543d654a1d2c5a90f0; WEVNSM=1.0.0; WNMCID=enajcx.1743681325685.01.0; WM_TID=HTW1L0ULHLNBQFBEAQOHYv7PgVaSArhx; sDeviceId=YD-IVzGgWPXqwZFVhVEABfTJq6f1QOCwCpS; __snaker__id=92zzkdzQ8H2XzDGJ; ntes_utid=tid._.hZPnHxNnA%252FxBF0UBBVbCZu%252FfkReGkD4X._.0; ntes_kaola_ad=1; timing_user_id=time_LbWdQGtcAl; __csrf=18f8bc0fc21c38470448f08d3badef4b; WM_NI=PMSofCRsDs8wY0WG6S3MRRK96yCOojSA7p8fK8eyUa7r%2F1HGOBV8Jti6qs4CvK%2BujA7r9EcZDSZj93i8OAHP9Ql9KLq3kj%2BLgy8uHGL%2FsWPiTZqsqonU9JWIbuKTw9ILdlY%3D; WM_NIKE=9ca17ae2e6ffcda170e2e6ee82d2468feefb8bdb39b2b48aa3c54f838b8aacc76f859989a3e44fb58abed1b62af0fea7c3b92a94939d90e54992ad8c94bb7d9bf099a8b559f1939eb3ca33f6a78db0ee62919ff991bb6e89e8ab9ad86bf5aee1d2cb4d8d9e9ad9c980abeabf94b749b695e596e94bf5aef7a6e252888d968bbc39abe881a2cb5cfb8fa4daca48b3eda58baa48a5a7f896cb4d90f1bdb8d3639886bf94f465ae8bf7abd643a2ab85b5f6338b94ac8ddc37e2a3; P_INFO=19960350272|1744982337|1|music|00&99|null&null&null#CN&null#10#0|&0||19960350272; __csrf=8ffd462b5e51734c842c5f229b21d9cd; __remember_me=true; MUSIC_U=00D538EC130447B59C34D8D0C335F8D20AA8A824C700241C46D5B32CBDB341D227E8C437222FBEEE8F71F109BA1050B8B1E470E8CF1E54B24AB37206542F8B9EFBA82AAD56D63CB42AD6A616EC0CA8094F56D1250F85AAEB848D4D4DDA837165C03D30454719C57F172067FF5F1FBBA70435A005B93E27434BCFBEE94EC69F515B07AA1D4675E8B8CF25E471B937614213026A1D6DD28419E710F006DF5DB8279D40393BEF63072A2A5175A038E3982B4EBC53E6B7EFB41F5DCE2A16E8681417180F2F8F68AA63E3AD8CC338FD56B5B7AA785F367F8921386B5F5802284545C2D131FD934954262ED2CDE0F84EE4E93BE58C8F73DFF0E3355A8C04F78B30F02838A0F96BAB7862E7FCFAEAFCC2235057DCFF673E5BA1884264C76E002B8DBAA7EA070B26D1B258F2983E35B29192AA1AE04AE786A4CFA0C28B3E70413EB99B908D433760FCF833F6F8FB0BAD848EA0472EA9CFD714FB7651AD4D8E16E2EB532BDA; gdxidpyhxdE=aLwUpqUu2pmnlxPnDT2%5C2wg8TyLgzTIOBa1Suiye0p%5CKMXqXMzjnMUs%2FQkV2oOWOSimf1RjANps1ttZ0O8go2Uje8d%2Fe3WNWmjmd8EAxj98JG3%5CrwpuG5ogcaiIW9jye5TC1aj2RISoUbIBAEG4%5C%2FwsiMX26j5T5Z8fSlB1sSMRCmvk8%3A1744985685663; JSESSIONID-WYYY=I6utQhgxWOpXqH%2B6o4tftBKCgrdpHWsjQ%2B3%5Cl%5C2rIGY3k0zDAjK8ZIKu8yYvaSJQAQ5M0opxiwoJA%5CgkQNGMGUQ2uOldkpW95KKdq5z51TmMZB%2B0aNZzOXO%5CaC5D0U4PsrlwZNAASIFPxXHx8x%2B82IJRz9GGaVx5RWUQal1TsJWtwNWc%3A1745046753137; playerid=73555069',
+    'origin':
+        'https://music.163.com',
+    'referer':
+        'https://music.163.com/'
+}
+jiemi = open('jiemi.js', encoding='utf-8').read()
+jiemi_code = execjs.compile(jiemi)
+i1x = {
+    "ids": "[2684679467]",
+    "level": "standard",
+    "encodeType": "aac",
+    "csrf_token": "18f8bc0fc21c38470448f08d3badef4b"
+}
+
+sign = jiemi_code.call('getSigh', i1x)
+print(sign)
+data = {
+    'params':
+    # 'gIsl6jzcQy/zS5oN2LJCqzsantXp8Ee0PrcD2fvxhQ9sQ9ihtCNPGYwtAwJXx00yUEVWBmjclTWagsbW4dHmW9RgB7++LgxkDsmcb6IYN96Gvmw1JzxdBCevCwMxpEX6Mj7yw8Ry2HbcUnF7YIAGAQGfUKzfhni2bSoq+H+5jZ5yEHBvFuA+OUI3XOaFbT8XT3Zkl4PjGmI5ZQq//asanA==',
+        sign['encText'],
+    'encSecKey':
+        sign['encSecKey']
+    # '415dfe2c17f5267f7632408a781eb6a3c37cf875fe83f08cb233718d55ced272b0e0e866dfc18c26e7791967bb0193a964ee43e1869aa481f426eb417c50d4807576c1d7c97c0933cae96b001c85616b8e9fc7ce143a058d0e53fbcb20e5e4fcd9ea3df1786a4631cfbf88a5c89fce302d5980cfb8f6c4b8160af5a5a7ef8e80'
+}
+time.sleep(random.randint(2, 4))
+
+post = requests.post(url=url, data=data, headers=headers)
+print(post.text)
+data=post.json()
+print(data['data'][0]['url'])
+
+all_url = 'https://music.163.com/discover/toplist?id=3778678'
+headers = {
+    'user-agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0',
+    'cookie':
+        'NMTID=00Ocgp4n9wFlrTRmE1TtjEGpil44W4AAAGV-4GHjA; _iuqxldmzr_=32; _ntes_nnid=61a2a76de52d5b543d654a1d2c5a90f0,1743681325307; _ntes_nuid=61a2a76de52d5b543d654a1d2c5a90f0; WEVNSM=1.0.0; WNMCID=enajcx.1743681325685.01.0; WM_TID=HTW1L0ULHLNBQFBEAQOHYv7PgVaSArhx; sDeviceId=YD-IVzGgWPXqwZFVhVEABfTJq6f1QOCwCpS; __snaker__id=92zzkdzQ8H2XzDGJ; ntes_utid=tid._.hZPnHxNnA%252FxBF0UBBVbCZu%252FfkReGkD4X._.0; ntes_kaola_ad=1; timing_user_id=time_LbWdQGtcAl; __csrf=18f8bc0fc21c38470448f08d3badef4b; WM_NI=PMSofCRsDs8wY0WG6S3MRRK96yCOojSA7p8fK8eyUa7r%2F1HGOBV8Jti6qs4CvK%2BujA7r9EcZDSZj93i8OAHP9Ql9KLq3kj%2BLgy8uHGL%2FsWPiTZqsqonU9JWIbuKTw9ILdlY%3D; WM_NIKE=9ca17ae2e6ffcda170e2e6ee82d2468feefb8bdb39b2b48aa3c54f838b8aacc76f859989a3e44fb58abed1b62af0fea7c3b92a94939d90e54992ad8c94bb7d9bf099a8b559f1939eb3ca33f6a78db0ee62919ff991bb6e89e8ab9ad86bf5aee1d2cb4d8d9e9ad9c980abeabf94b749b695e596e94bf5aef7a6e252888d968bbc39abe881a2cb5cfb8fa4daca48b3eda58baa48a5a7f896cb4d90f1bdb8d3639886bf94f465ae8bf7abd643a2ab85b5f6338b94ac8ddc37e2a3; P_INFO=19960350272|1744982337|1|music|00&99|null&null&null#CN&null#10#0|&0||19960350272; __csrf=8ffd462b5e51734c842c5f229b21d9cd; __remember_me=true; MUSIC_U=00D538EC130447B59C34D8D0C335F8D20AA8A824C700241C46D5B32CBDB341D227E8C437222FBEEE8F71F109BA1050B8B1E470E8CF1E54B24AB37206542F8B9EFBA82AAD56D63CB42AD6A616EC0CA8094F56D1250F85AAEB848D4D4DDA837165C03D30454719C57F172067FF5F1FBBA70435A005B93E27434BCFBEE94EC69F515B07AA1D4675E8B8CF25E471B937614213026A1D6DD28419E710F006DF5DB8279D40393BEF63072A2A5175A038E3982B4EBC53E6B7EFB41F5DCE2A16E8681417180F2F8F68AA63E3AD8CC338FD56B5B7AA785F367F8921386B5F5802284545C2D131FD934954262ED2CDE0F84EE4E93BE58C8F73DFF0E3355A8C04F78B30F02838A0F96BAB7862E7FCFAEAFCC2235057DCFF673E5BA1884264C76E002B8DBAA7EA070B26D1B258F2983E35B29192AA1AE04AE786A4CFA0C28B3E70413EB99B908D433760FCF833F6F8FB0BAD848EA0472EA9CFD714FB7651AD4D8E16E2EB532BDA; gdxidpyhxdE=aLwUpqUu2pmnlxPnDT2%5C2wg8TyLgzTIOBa1Suiye0p%5CKMXqXMzjnMUs%2FQkV2oOWOSimf1RjANps1ttZ0O8go2Uje8d%2Fe3WNWmjmd8EAxj98JG3%5CrwpuG5ogcaiIW9jye5TC1aj2RISoUbIBAEG4%5C%2FwsiMX26j5T5Z8fSlB1sSMRCmvk8%3A1744985685663; JSESSIONID-WYYY=%5Ca9ityo%2FJsNG3RXQtWq6S%5CmyACQDtVI3zGkrzUJ10Z5aCihqVlgUlv1tsprdrHmrVAD%5CSDh%2Ffl7aoan4f7sZs4NPF6Dhks5XAZdFdbfghfiSUAHC1rTWjxv4%5CpQW1N5NYmgB40aGDxnsFh7BJqHl2Hcn4eFITef3q9OptBaXbmZBHrDQ%3A1745032826975; playerid=39915923',
+    'referer':
+        'https://music.163.com/'
+}
+
+get = requests.get(url=all_url, headers=headers)
+tree = etree.HTML(get.text)
+song_ids = tree.xpath('//ul[@class="f-hide"]/li/a/@href')
+for index, id in enumerate(song_ids):
+    song_ids[index] = str(id).split('?')[1].split('=')[1]
